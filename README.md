@@ -10,7 +10,7 @@ Kenya’s health system faces a persistent malaria burden; **10 counties account
 
 Climate variability has undermined the reliability of rainy seasons in ASAL counties, making responses **reactive and delayed**, driving lost schooling/productivity, stock‑outs, HCW burnout, and avoidable morbidity/mortality (especially in pregnant women and children).
 
-This project proposes a **climate‑informed Early Warning & Response (EWR) platform** that fuses **recent weather signals** (rainfall, temperature, humidity, wind speed) with **historical malaria trends** to forecast outbreak **timing**, **magnitude**, and **risk** **up to 4 weeks** ahead. 
+This project proposes a **climate‑informed Early Warning & Response (EWR) platform** that fuses **recent weather signals** (rainfall, temperature, humidity, wind speed) with **historical malaria trends** to forecast outbreak **timing**, and **magnitude**,  **up to 4 weeks** ahead. 
 
 ---
 
@@ -29,12 +29,12 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 
 ## 4) Goals & Objectives
 - Deliver **actionable 4‑week forecasts** at facility/catchment level.
-- Produce **risk‑tier alerts (Low / Medium / High)** with clear operational playbooks.
+- Produce **alerts (Outbreak/No outbreak)** to guide programs.
 - Enable **data‑driven planning** for MoH/County and partners (stock, staffing, outreach).
 
 ### SMART Targets (initial)
-- **Lead time:** ≥ 4 weeks ahead of observed peaks for ≥ 70% of high‑risk alerts in the pilot period.
-- **Forecast quality:** Baseline targets—Regression **MAE ≤ 10–15 cases** per facility‑week; Classification **F1 ≥ 0.70** for high‑risk tier (to be refined after baseline EDA).
+- **Lead time:** ≥ 4 weeks ahead of observed peaks for 
+- **Forecast quality:** Baseline targets—Regression **MAE ≤ 10–15 cases** per week; **R2 of ≥ 70**, **Least RMSE**. 
 - **Operational uptake:** **≥ 80%** of alerts actioned within **7 days** by facilities/CHWs.
 
 ---
@@ -52,8 +52,8 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 
 ## 6) Success Metrics
 **Business/Operational**
-- **Lead time:** Consistent **4‑week forecasts** at facility/catchment level.
-- **Uptake:** % of alerts actioned within **7 days**; **stockout rate** during peaks; **CHW coverage** in high‑risk zones.
+- **Lead time:** Consistent **4‑week forecasts** at catchment level.
+- **Uptake:** % of alerts actioned within **7 days**; **stockout rate** during peaks
 
 **Technical (Forecast Quality)**
 - **Regression:** RMSE, MAE, R²
@@ -64,49 +64,33 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 
 ## 7) Scope
 **In‑scope**
-- Facility‑level malaria case counts & positivity (Kakuma pilot), Open‑Meteo weather (rainfall, temperature, humidity, wind speed).
+- Facility‑level malaria case counts & positivity (Kakuma Ward pilot), Open‑Meteo weather (rainfall, temperature, humidity, wind speed).
 - Creation of lagged weather features and rolling aggregates.
 - Weekly forecasts (option to evaluate daily where data permits).
-- Dashboard + weekly SMS/Email briefs.
+- Dashboard of predicted Vs actual malaria case counts.
 
 ---
 
 ## 8) Data Sources & Access
-- **Cases:** Facility registers / DHIS2 extracts from Kakuma sites (counts, RDT positives). Custodian: Facility managers/County DoH.
-- **Weather:** **Open‑Meteo** API (rainfall, temperature, humidity, wind speed). Fallback: NASA POWER/NOAA if needed.
+- **Cases:** Facility registers / DHIS2 extracts from Kakuma sites (Malaria microscopy and RDT positives). Custodian: Ministry of Health
+- **Weather:** **Open‑Meteo** API (rainfall, temperature, humidity, wind speed). 
 
-> **Access & Security:** Follow MoH/County data‑sharing agreements. No personally identifiable information (PII) is required; use aggregated counts.
-
----
-
-## 9) Data Dictionary (initial – to be finalized post‑ingestion)
-| Field | Type | Example | Notes |
-|---|---|---|---|
-| `date` | date | `2025-07-14` | ISO‑8601 |
-| `facility_id` | string | `KAKUMA-01` | Unique facility code |
-| `cases_total` | int | `124` | OPD malaria cases (all ages) |
-| `cases_rdt_positive` | int | `78` | Confirmed positives |
-| `rain_mm` | float | `12.4` | Daily or aggregated to week |
-| `temp_mean_c` | float | `29.1` | °C |
-| `rh_mean_pct` | float | `47.0` | Relative humidity |
-| `wind_mean_ms` | float | `3.2` | m/s |
-| `rain_mm_lag2w` | float | `32.8` | Engineered feature |
-| `temp_mean_lag3w` | float | `27.6` | Engineered feature |
+> **Access & Security:** During acquisition of data, we followed MoH/County data‑sharing agreements. No personally identifiable information (PII) is required since we used aggregated counts.
 
 ---
 
-## 10) Assumptions & Constraints
+## 9) Assumptions & Constraints
 - Case reporting completeness is ≥ 90% week‑to‑week after basic cleaning/imputation.
 - Weather feeds are programmatically retrievable and stable.
 - Initial history available: **3–5 years** (longer history improves seasonal modeling).
 
 **Constraints**
-- Class imbalance likely (many low weeks, few peaks) — will affect thresholding and evaluation.
-- Limited local compute; aim for **lightweight models** initially; scale up only as needed.
+- There is an expected class imbalance (many low weeks, few peaks) and this  will affect thresholding and evaluation.
+- Limited local compute; We therefore use **lightweight models** initially; scale up recommended for more complex models.
 
 ---
 
-## 11) Risks & Mitigations
+## 10) Risks & Mitigations
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Missing/incomplete case data | Bias/poor forecasts | Automated checks; imputation; data quality dashboards |
@@ -137,7 +121,5 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 - Missingness matrix/heatmap; outlier detection summary.
 
 **EDA Deliverables**
-- `eda_report.html` (auto‑generated) and a narrative notebook `01_eda.ipynb`.
-- Cleaned, versioned datasets in `/data/processed/`.
-- Recommendations for feature set and evaluation thresholds.
+
 
