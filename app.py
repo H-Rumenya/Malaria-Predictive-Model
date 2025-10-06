@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Define model directory and timestamp
 MODEL_DIR = 'Models'
-TIMESTAMP = '20251005_204205'  # Replace with your actual timestamp from model_training.py
+TIMESTAMP = '20251005_204205'  
 
 # Load regression model and metadata
 reg_metadata_path = os.path.join(MODEL_DIR, f'regression_metadata_{TIMESTAMP}.json')
@@ -195,7 +195,7 @@ def home():
                 <label>Soil Moisture (m³/m³):</label>
                 <input type="number" name="soil_moisture_top_m3m3_{{ i }}" step="0.001" placeholder="0.1"><br>
                 <label>Current Malaria Cases (optional):</label>
-                <input type="number" name="Combined_positive_{{ i }}" step="1" placeholder="Leave blank if unknown"><br>
+                <input type="number" name="Combined_positive_{{ i }}" step="1" placeholder="0 if unknown"><br>
             </div>
             {% endfor %}
 
