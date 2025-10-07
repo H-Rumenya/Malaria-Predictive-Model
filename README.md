@@ -142,7 +142,7 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 
 **What it shows:** Same‑week correlations with weather are weak, but **lagged** effects matter.
 
-![Correlation vs. lag (0–12 weeks)](Images/Correlation_with_lagged_features.png)
+![Correlation vs. lag (0–12 weeks)](Images/Correlation_at_lagged_weeks.png)
 
 **What it shows (lag effects):**
 - Rainfall and humidity show **stronger links 4–5 weeks later**, consistent with mosquito breeding cycles.
