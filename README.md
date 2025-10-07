@@ -100,7 +100,7 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 
 ---
 
-## 12) Exploratory Data Analysis (EDA) Plan
+## 11) Exploratory Data Analysis (EDA) Plan
 **Objectives**
 1. Characterize **trends, seasonality, and variability** in cases per facility.
 2. Quantify **lag relationships** between weather variables and cases.
@@ -122,22 +122,22 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 
 **EDA Deliverables**
 
-### 3.1 Weekly trend with rolling averages
+### 11.1 Weekly trend with rolling averages
 ![Weekly malaria positives with short (4‑week) and longer (12‑week) smoothing](Malaria-Predictive-Model/Images/Weekly Malaria positives with rolling means.png)
 
 **What it shows:** Clear seasonal peaks most years and a gradual uptick in the recent baseline. This supports planning **before** peak weeks.
 
-### 3.2 Seasonal profile across the year
+### 11.2 Seasonal profile across the year
 ![Average cases by week‑of‑year with ±1 SD band](Malaria-Predictive-Model/Images/Seasonal Profile.png)
 
 **What it shaows:** Two notable high‑risk windows emerge each year. Programs can time LLIN/IRS campaigns, CHW outreach and stock levels to precede these windows.
 
-### 3.3 Off‑season anomalies (heatmap)
+### 11.3 Off‑season anomalies (heatmap)
 ![Standardized anomalies (z‑scores) by week and year](Malaria-Predictive-Model/Images/Anomaly Heatmap.png)
 
 **What it shows:** Weeks with unusual spikes (red) signal potential outbreaks; these visuals are helpful for rapid reviews.
 
-### 3.4 Weather relationships
+### 11.4 Weather relationships
 ![Correlation heatmap (same‑week)](Malaria-Predictive-Model/Images/Same week correlation.png)
 
 **What it shows:** Same‑week correlations with weather are weak, but **lagged** effects matter.
@@ -148,19 +148,19 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 - Rainfall and humidity show **stronger links 4–5 weeks later**, consistent with mosquito breeding cycles.
 - Cooler prior weeks (≈4 weeks earlier) often precede higher malaria, while higher winds can suppress vector survival.
 
-### 3.5 Time‑series structure
+### 11.5 Time‑series structure
 ![Autocorrelation (ACF)](Malaria-Predictive-Model/Images/ACF of weekly malaria incidences.png)
 
 ![Partial autocorrelation (PACF)](Malaria-Predictive-Model/Images/PACF annotated.png)
 
 **What it shows:** The series has short‑term persistence (this week depends on the recent weeks) and an annual cycle.
 
-### 3.6 Seasonal decomposition
+### 11.6 Seasonal decomposition
 
 A **multiplicative (log‑scale) seasonal pattern** fits best, leaving near‑white‑noise residuals and supporting seasonal modeling on a log scale.
 
 ---
-## 13) Feature Engineering
+## 12) Feature Engineering
 
 This was done by creating signals that the model could learn from. These signals were products of the EDA and had helped us to understand our data better. They included: 
  
@@ -173,7 +173,7 @@ This was done by creating signals that the model could learn from. These signals
 All of these were derived from the merged weekly dataset and kept only when they added unique signal (we screened out highly overlapping variables).
 
 Code snippets
-### 13.1 Seasonality (Fourier terms)
+### 12.1 Seasonality (Fourier terms)
 
 ```python
 # Month and ISO week-of-year encodings
@@ -185,14 +185,14 @@ X['sin_week']  = np.sin(2*np.pi*X['woy']/52)
 X['cos_week']  = np.cos(2*np.pi*X['woy']/52)
 ```
 
-### 13.2 Recent momentum (rolling windows)
+### 12.2 Recent momentum (rolling windows)
 
 ```python
 for w in [4, 8, 12]:
     X[f'cp_roll_mean_{w}'] = y.rolling(w, min_periods=2).mean()
     X[f'cp_roll_std_{w}']  = y.rolling(w, min_periods=2).std()
 ```
-### 13.3 Lagged weather & interactions
+### 12.3 Lagged weather & interactions
 ```python
 # Lags informed by cross-correlation analysis (~4–5 weeks)
 for lag in [4, 5]:
@@ -203,7 +203,7 @@ X['rain_soil_interaction'] = X['rain_mm'] * X['soil_moisture_top_m3m3']
 X['temp_rh_interaction']   = X['temp_c'] * X['rh_pct']
 ```
 
-### 13.4 Surge classification targets
+### 12.4 Surge classification targets
 
 ```python
 ratio = y.shift(-1) / y
@@ -213,7 +213,7 @@ y_cls = (ratio >= 1.5).astype(int)
 Drop rows with NaNs introduced by lags/rollings.
 
 ---
-## 14) Modelling approach
+## 13) Modelling approach
 
 We trained two complimentary models since our problem needed both regression and classification.
 
@@ -227,7 +227,7 @@ We trained two complimentary models since our problem needed both regression and
 
 ---
 
-## 15) Evaluation 
+## 14) Evaluation 
 
 - **Regression (test period):** MASE ≈ **0.23**, **R² ≈ 0.99**, **RMSE ≈ 193** – meaning predictions are much better than the naive “last week = this week,” and they track levels closely during the test window.
 - **Classification (alerts):** ROC‑AUC ≈ **0.87**. Using the **Precision‑Recall‑optimized threshold ≈ 0.21**, we achieved **Precision ≈ 0.61** and **Recall ≈ 0.85** on spikes ≥50% week‑over‑week. This balances catching most surges while keeping false alarms manageable.
@@ -241,7 +241,7 @@ We trained two complimentary models since our problem needed both regression and
 
 ---
 
-## 16) Reproducibility
+## 15) Reproducibility
 
 Environment: Python >= 3.10. Key libraries: pandas, numpy, scikit-learn, matplotlib, seaborn, statsmodels, scipy, joblib.
 
@@ -254,7 +254,7 @@ Steps:
 5) Re-run weekly to update thresholds and monitor drift.
 
 ---
-## 17) Limitations and Next Steps
+## 16) Limitations and Next Steps
 
 - Reporting delays/outliers; consider robust smoothing and nowcasting.
 - Intervention shifts (IRS/LLIN, CHW campaigns) may change relationships; add flags.
