@@ -123,35 +123,35 @@ This project proposes a **climate‑informed Early Warning & Response (EWR) plat
 **EDA Deliverables**
 
 ### 11.1 Weekly trend with rolling averages
-![Weekly malaria positives with short (4‑week) and longer (12‑week) smoothing](Malaria-Predictive-Model/Images/Weekly Malaria positives with rolling means.png)
+![Weekly malaria positives with short (4‑week) and longer (12‑week) smoothing](Malaria-Predictive-Model/Images/Weekly_Malaria_positives_with_rolling_means.png)
 
 **What it shows:** Clear seasonal peaks most years and a gradual uptick in the recent baseline. This supports planning **before** peak weeks.
 
 ### 11.2 Seasonal profile across the year
-![Average cases by week‑of‑year with ±1 SD band](Malaria-Predictive-Model/Images/Seasonal Profile.png)
+![Average cases by week‑of‑year with ±1 SD band](Malaria-Predictive-Model/Images/Seasonal_Profile.png)
 
 **What it shaows:** Two notable high‑risk windows emerge each year. Programs can time LLIN/IRS campaigns, CHW outreach and stock levels to precede these windows.
 
 ### 11.3 Off‑season anomalies (heatmap)
-![Standardized anomalies (z‑scores) by week and year](Malaria-Predictive-Model/Images/Anomaly Heatmap.png)
+![Standardized anomalies (z‑scores) by week and year](Malaria-Predictive-Model/Images/Anomaly_Heatmap.png)
 
 **What it shows:** Weeks with unusual spikes (red) signal potential outbreaks; these visuals are helpful for rapid reviews.
 
 ### 11.4 Weather relationships
-![Correlation heatmap (same‑week)](Malaria-Predictive-Model/Images/Same week correlation.png)
+![Correlation heatmap (same‑week)](Malaria-Predictive-Model/Images/Same_week_correlation.png)
 
 **What it shows:** Same‑week correlations with weather are weak, but **lagged** effects matter.
 
-![Correlation vs. lag (0–12 weeks)](Malaria-Predictive-Model/Images/Correlation with lagged features.png)
+![Correlation vs. lag (0–12 weeks)](Malaria-Predictive-Model/Images/Correlation_with_lagged_features.png)
 
 **What it shows (lag effects):**
 - Rainfall and humidity show **stronger links 4–5 weeks later**, consistent with mosquito breeding cycles.
 - Cooler prior weeks (≈4 weeks earlier) often precede higher malaria, while higher winds can suppress vector survival.
 
 ### 11.5 Time‑series structure
-![Autocorrelation (ACF)](Malaria-Predictive-Model/Images/ACF of weekly malaria incidences.png)
+![Autocorrelation (ACF)](Malaria-Predictive-Model/Images/ACF_of_weekly_malaria_incidences.png)
 
-![Partial autocorrelation (PACF)](Malaria-Predictive-Model/Images/PACF annotated.png)
+![Partial autocorrelation (PACF)](Malaria-Predictive-Model/Images/PACF_annotated.png)
 
 **What it shows:** The series has short‑term persistence (this week depends on the recent weeks) and an annual cycle.
 
@@ -223,7 +223,7 @@ We trained two complimentary models since our problem needed both regression and
 **Time series split** was used to avoid future variables in the training sample the  
 - **train‑/test split** was done (training up to **June 30, 2024**, testing from **July 1, 2024** onward) and **time‑series cross‑validation** during tuning.
 
-![Time series actual Vs predicted](Malaria-Predictive-Model/Images/Time_series Actual vs Predicted.png)
+![Time series actual Vs predicted](Malaria-Predictive-Model/Images/Time_series_Actual_vs_Predicted.png)
 
 ---
 
@@ -234,7 +234,7 @@ We trained two complimentary models since our problem needed both regression and
 
 > **Operational note:** Thresholds are adjustable. Programs can favor **higher recall** (catch more surges, tolerate more false alerts) or **higher precision** (fewer false alerts, risk missing some surges) depending on resources.
 
-![Confusion Matrix](Malaria-Predictive-Model/Images/Confusion Matrix.png)
+![Confusion Matrix](Malaria-Predictive-Model/Images/Confusion_Matrix.png)
 
 - Regression: MASE ~ 0.23, R^2 ~ 0.99, RMSE ~ 193
 - Classification (PR-optimized ~0.21): Precision ~ 0.61, Recall ~ 0.85, ROC-AUC ~ 0.87
