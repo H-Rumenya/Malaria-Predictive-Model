@@ -261,6 +261,8 @@ Steps:
 - Consider SARIMAX/Prophet, gradient boosting, or probabilistic forecasts.
 - Extend to spatial hierarchies (facility/village).
 
+Visit the [Malaria Outbreak Predictor](https://malaria-predictor-app.herokuapp.com) to test the live model.
+
 Contributors 
 1. Hezron Rumenya 
 2. Joackim Kisienya
