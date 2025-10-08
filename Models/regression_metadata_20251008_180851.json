@@ -1,11 +1,9 @@
 {
     "model_type": "RandomForest",
-    "timestamp": "20251005_204205",
-    "precision": 0.5789473684210527,
-    "recall": 0.8461538461538461,
-    "roc_auc": 0.8621794871794872,
-    "average_precision": 0.5329340524654885,
-    "best_threshold": 0.20446199731221365,
+    "timestamp": "20251008_180851",
+    "mase": 0.23224654022615743,
+    "r2": 0.9891997654476217,
+    "rmse": 193.8604634181657,
     "features": [
         "temp_c",
         "rh_pct",
