@@ -72,24 +72,86 @@ def home():
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        h1 { color: #1565c0; font-weight: 700; margin: 0; font-size: 2.5em; }
-        p { color: #555; font-size: 1.1em; margin: 10px 0 20px; text-align: center; }
-        form { display: flex; flex-direction: column; gap: 20px; }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #1565c0;
+            font-weight: 700;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        p {
+            color: #555;
+            font-size: 1.1em;
+            margin: 10px 0 20px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
         .top-inputs {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
-        .input-group { position: relative; }
-        label { display: block; font-weight: 500; color: #333; margin-bottom: 5px; font-size: 1em; }
+        .input-group {
+            position: relative;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
         input[type="number"], select {
-            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em;
-            transition: all 0.3s ease; box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
         input[type="number"]:focus, select:focus {
-            border-color: #1565c0; box-shadow: 0 0 8px rgba(21, 101, 192, 0.3); outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 8px rgba(21, 101, 192, 0.3);
+            outline: none;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
         .week-box {
             background: #f5faff;
@@ -97,21 +159,73 @@ def home():
             border-radius: 12px;
             border: 1px solid #e0e7ff;
             margin-bottom: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
-         .week-box:hover {
-           animation: bounce 0.5s ease;
-           box-shadow: 0 12px 30px rgba(21, 101, 192, 0.35);
+        .week-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(21, 101, 192, 0.2);
         }
-        h3 { color: #0d47a1; font-size: 1.4em; margin-bottom: 15px; border-bottom: 2px solid #42a5f5; padding-bottom: 5px; }
+        h3 {
+            color: #0d47a1;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #42a5f5;
+            padding-bottom: 5px;
+        }
         .submit-btn {
-            background: #1565c0; color: white; padding: 15px; border: none;
-            border-radius: 10px; font-size: 1.2em; cursor: pointer;
+            background: #1565c0;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .submit-btn:hover { background: #0d47a1; transform: scale(1.05); }
+        .submit-btn:hover {
+            background: #0d47a1;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.4);
+        }
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+        .submit-btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
         footer {
-            text-align: center; padding: 20px; color: #000000;
-            background: transparent; width: 100%; font-size: 1em; font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            color: #000000;
+            background: transparent;
+            width: 100%;
+            font-size: 1em;
+            font-weight: bold;
+            position: relative;
+            bottom: 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .top-inputs {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -119,22 +233,30 @@ def home():
     <div class="container">
         <div class="header">
              <h1>Kakuma Ward Malaria Predictor</h1>
-            <p>Predict malaria cases or detect outbreaks (≥ 2000 cases) using weekly weather data.</p>
+            <p>Predict malaria cases or detect outbreaks (next week's cases ≥ 2000 and ≥ 1.5 times current week's cases) using weekly weather data.</p>
         </div>
 
         <form action="/submit" method="POST">
             <div class="top-inputs">
                 <div class="input-group">
-                    <label>Number of Weeks (1–4):</label>
+                    <label class="tooltip">Number of Weeks (1–4):
+                        <span class="tooltiptext">Select how many weeks to predict (1 to 4).</span>
+                    </label>
                     <input type="number" name="period" min="1" max="4" value="4" required>
                 </div>
                 <div class="input-group">
-                                      <label style="font-weight: bold;">Task: Get the Case Counts and Detect Outbreaks</label>
-                                      <input type="hidden" name="task" value="regression">
-                                      </div>
-
+                    <label class="tooltip">Task:
+                        <span class="tooltiptext">Choose to predict case counts  or detect outbreaks .</span>
+                    </label>
+                    <select name="task" required>
+                        <option value="regression">Get the Case Counts</option>
+                        <option value="classification">Detect Outbreak</option>
+                    </select>
+                </div>
                 <div class="input-group">
-                    <label>Current Malaria Cases:</label>
+                    <label class="tooltip">Current Malaria Cases:
+                        <span class="tooltiptext">Enter current week's malaria cases (default: 0).</span>
+                    </label>
                     <input type="number" name="Combined_positive" step="1" value="0" required>
                 </div>
             </div>
@@ -143,23 +265,33 @@ def home():
             <div class="week-box">
                 <h3>Week {{ i+1 }}</h3>
                 <div class="input-group">
-                    <label>Temperature (°C):</label>
+                    <label class="tooltip">Temperature (°C):
+                        <span class="tooltiptext">Enter temperature in Celsius (e.g., 25.1234).</span>
+                    </label>
                     <input type="number" name="temp_c_{{ i }}" step="0.0001" placeholder="25.1234">
                 </div>
                 <div class="input-group">
-                    <label>Relative Humidity (%):</label>
+                    <label class="tooltip">Relative Humidity (%):
+                        <span class="tooltiptext">Enter humidity percentage (e.g., 60.1234).</span>
+                    </label>
                     <input type="number" name="rh_pct_{{ i }}" step="0.0001" placeholder="60.1234">
                 </div>
                 <div class="input-group">
-                    <label>Rainfall (mm):</label>
+                    <label class="tooltip">Rainfall (mm):
+                        <span class="tooltiptext">Enter rainfall in millimeters (e.g., 10.1234).</span>
+                    </label>
                     <input type="number" name="rain_mm_{{ i }}" step="0.0001" placeholder="10.1234">
                 </div>
                 <div class="input-group">
-                    <label>Wind Speed (km/h):</label>
+                    <label class="tooltip">Wind Speed (km/h):
+                        <span class="tooltiptext">Enter wind speed in km/h (e.g., 5.1234).</span>
+                    </label>
                     <input type="number" name="wind10_kmh_{{ i }}" step="0.0001" placeholder="5.1234">
                 </div>
                 <div class="input-group">
-                    <label>Soil Moisture (m³/m³):</label>
+                    <label class="tooltip">Soil Moisture (m³/m³):
+                        <span class="tooltiptext">Enter soil moisture in m³/m³ (e.g., 0.1234).</span>
+                    </label>
                     <input type="number" name="soil_moisture_top_m3m3_{{ i }}" step="0.0001" placeholder="0.1234">
                 </div>
             </div>
@@ -254,10 +386,6 @@ def submit():
                 results.setdefault('classification', []).extend(class_preds)
                 results.setdefault('class_probabilities', []).extend(class_probs.tolist())
 
-        # --- ADDITION: spike detection for regression results ---
-        if task == 'regression':
-            results['spike'] = ['Yes' if val >= 2000 else 'No' for val in results['regression']]
-
         html = '''
         <html><head>
         <title>Prediction Results</title>
@@ -265,19 +393,23 @@ def submit():
         body {font-family: 'Roboto', sans-serif; margin: 40px; background: #f5faff;}
         .container {max-width: 900px; margin: auto; padding: 20px; background: #fff; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);}
         h2 {color: #1565c0; text-align: center; font-weight: 700;}
+        p {color: #555; font-size: 1em; text-align: center;}
         table {border-collapse: collapse; width: 100%; margin: 20px 0;}
         th,td {border: 1px solid #e0e7ff; padding: 12px; text-align: center;}
-        th {background: #1565c0; color: white;}
+        th {background: #1565c0; color: white; font-weight: 700;}
         tr:nth-child(even) {background: #f5faff;}
-        .back-btn {display: block; width: 200px; margin: 20px auto; padding: 12px; background: #1565c0; color: white; text-align: center; border-radius: 8px;}
+        tr:hover {background: #e3f2fd;}
+        .back-btn {display: block; width: 200px; margin: 20px auto; padding: 12px; background: #1565c0; color: white; text-align: center; text-decoration: none; border-radius: 8px; transition: all 0.3s ease;}
+        .back-btn:hover {background: #0d47a1; transform: scale(1.05);}
         </style></head>
         <body>
         <div class="container">
             <h2>Prediction Results</h2>
+            <p><b>Note:</b> A "Spike" indicates an outbreak where next week's malaria cases are predicted to be ≥ 2000 and ≥ 1.5 times the current week's cases.</p>
             <table>
                 <tr><th>Week</th>
                 {% if task == 'regression' %}
-                <th>Predicted Cases</th><th>Outbreak?</th>
+                <th>Predicted Cases</th>
                 {% else %}
                 <th>Outbreak Status</th><th>Probability</th>
                 {% endif %}
@@ -287,7 +419,6 @@ def submit():
                     <td>{{ week_starts[i] }}</td>
                     {% if task == 'regression' %}
                     <td>{{ results.regression[i] | round(2) }}</td>
-                    <td>{{ results.spike[i] }}</td>
                     {% else %}
                     <td>{{ 'Yes' if results.classification[i] == 1 else 'No' }}</td>
                     <td>{{ results.class_probabilities[i] | round(3) }}</td>
