@@ -210,7 +210,7 @@ ratio = y.shift(-1) / y
 y_cls = (ratio >= 1.5).astype(int)
 ```
 
-Drop rows with NaNs introduced by lags/rollings.
+![Visit our Tableau Dashboard to see the 5 year trends](https://public.tableau.com/views/Malaria_predictive_analysis/dashboard?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
 ---
 ## 13) Modelling approach
@@ -261,7 +261,7 @@ Steps:
 - Consider SARIMAX/Prophet, gradient boosting, or probabilistic forecasts.
 - Extend to spatial hierarchies (facility/village).
 
-Visit the [Malaria Outbreak Predictor](https://malaria-predictor-app.herokuapp.com) to test the live model.
+Visit the [Malaria Outbreak Predictor](https://kakumamalariapredictor-e4116b68755a.herokuapp.com/) to test the live model.
 
 Contributors 
 1. Hezron Rumenya 
