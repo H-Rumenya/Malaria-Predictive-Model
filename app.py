@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Define model directory and timestamp
 MODEL_DIR = 'Models'
-TIMESTAMP = '20251008_180851'  
+TIMESTAMP = '20251008_180851'  # Replace with the actual timestamp from the notebook run (e.g., '20251008_XXXXXX')
 
 # Load regression model and metadata
 reg_metadata_path = os.path.join(MODEL_DIR, f'regression_metadata_{TIMESTAMP}.json')
@@ -43,12 +43,12 @@ def home():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kakuma Ward Malaria Predictor</title>
+    <title>Kakuma Malaria Predictor</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #e3f2fd, #f1f8e9);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             margin: 0;
             padding: 0;
             display: flex;
@@ -59,13 +59,13 @@ def home():
             color: #333;
         }
         .container {
-            background: #e3f2fd;
+            background: #ffffff;
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
             width: 95%;
-            max-width: 850px;
-            margin: 40px;
+            max-width: 900px;
+            margin: 20px;
             animation: fadeIn 1s ease-in-out;
         }
         @keyframes fadeIn {
@@ -208,11 +208,10 @@ def home():
         footer {
             text-align: center;
             padding: 20px;
-            color: #000000;
-            background: transparent;
+            color: #fff;
+            background: #1565c0;
             width: 100%;
             font-size: 1em;
-            font-weight: bold;
             position: relative;
             bottom: 0;
         }
@@ -232,8 +231,8 @@ def home():
 <body>
     <div class="container">
         <div class="header">
-             <h1>Kakuma Ward Malaria Predictor</h1>
-            <p>Predict malaria cases or detect outbreaks (next week's cases ≥ 2000 and ≥ 1.5 times current week's cases) using weekly weather data.</p>
+            <h1>Kakuma Malaria Predictor</h1>
+            <p>Predict Malaria Cases or Detect outbreak (next week's cases ≥ 2000 and ≥ 1.5 times current week's cases) using weekly weather data.</p>
         </div>
 
         <form action="/submit" method="POST">
@@ -246,11 +245,12 @@ def home():
                 </div>
                 <div class="input-group">
                     <label class="tooltip">Task:
-                        <span class="tooltiptext">Choose to predict case counts  or detect outbreaks .</span>
+                        <span class="tooltiptext">Choose to predict case counts, detect outbreak, or both.</span>
                     </label>
                     <select name="task" required>
-                        <option value="regression">Get the Case Counts</option>
-                        <option value="classification">Detect Outbreak</option>
+                        <option value="regression">Regression (Case Counts)</option>
+                        <option value="classification">Classification (Outbreak Detection)</option>
+                        <option value="both">Both (Regression + Classification)</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -314,8 +314,8 @@ def submit():
 
         if period < 1 or period > 4:
             return "Error: Period must be between 1 and 4.", 400
-        if task not in ['regression', 'classification']:
-            return "Error: Task must be 'regression' or 'classification'.", 400
+        if task not in ['regression', 'classification', 'both']:
+            return "Error: Task must be 'regression', 'classification', or 'both'.", 400
 
         period_data = []
         combined_positive = float(request.form.get('Combined_positive', 0))
@@ -330,7 +330,7 @@ def submit():
             }
             period_data.append(row)
 
-        start_date = datetime(2025, 10, 6)
+        start_date = datetime(2025, 10, 4)
         week_starts = [start_date + timedelta(weeks=i) for i in range(period)]
 
         df_list = []
@@ -356,7 +356,7 @@ def submit():
 
         results = {}
         for i in range(len(df)):
-            if i > 0 and task == 'regression' and 'regression' in results and len(results['regression']) > i-1:
+            if i > 0 and task in ['regression', 'both'] and 'regression' in results and len(results['regression']) > i-1:
                 df.loc[i, 'Combined positive'] = results['regression'][i-1]
 
             for window in [4, 8, 12]:
@@ -371,16 +371,16 @@ def submit():
             df['temp_rh_interaction'] = df['temp_c'] * df['rh_pct']
             df['temp_combined_interaction'] = df['temp_c'] * df['Combined positive']
 
-            if i < len(df) - 1 and task == 'regression' and 'regression' in results and len(results['regression']) > i:
+            if i < len(df) - 1 and task in ['regression', 'both'] and 'regression' in results and len(results['regression']) > i:
                 df.loc[i, 'ratio'] = results['regression'][i] / df.loc[i, 'Combined positive'] if df.loc[i, 'Combined positive'] != 0 else 1.0
                 df['ratio_lag_1'] = df['ratio'].shift(1).fillna(1.0)
                 df['ratio_lag_2'] = df['ratio'].shift(2).fillna(1.0)
 
             X = df[ALL_FEATURES].astype(float)
-            if task == 'regression':
+            if task in ['regression', 'both']:
                 reg_preds = reg_model.predict(X.iloc[[i]]).tolist()
                 results.setdefault('regression', []).extend(reg_preds)
-            if task == 'classification':
+            if task in ['classification', 'both']:
                 class_probs = class_model.predict_proba(X.iloc[[i]])[:, 1]
                 class_preds = (class_probs >= class_threshold).astype(int).tolist()
                 results.setdefault('classification', []).extend(class_preds)
@@ -405,22 +405,25 @@ def submit():
         <body>
         <div class="container">
             <h2>Prediction Results</h2>
-            <p><b>Note:</b> A "Spike" indicates an outbreak where next week's malaria cases are predicted to be ≥ 2000 and ≥ 1.5 times the current week's cases.</p>
+            <p><b>Note:</b> A "Outbreak" indicates an outbreak where next week's malaria cases are predicted to be ≥ 2000 and ≥ 1.5 times the current week's cases.</p>
             <table>
-                <tr><th>Week</th>
-                {% if task == 'regression' %}
-                <th>Predicted Cases</th>
-                {% else %}
-                <th>Outbreak Status</th><th>Probability</th>
-                {% endif %}
+                <tr>
+                    <th>Week</th>
+                    {% if task in ['regression', 'both'] %}
+                    <th>Predicted Cases</th>
+                    {% endif %}
+                    {% if task in ['classification', 'both'] %}
+                    <th>Outbreak Status</th><th>Probability</th>
+                    {% endif %}
                 </tr>
                 {% for i in range(period) %}
                 <tr>
                     <td>{{ week_starts[i] }}</td>
-                    {% if task == 'regression' %}
+                    {% if task in ['regression', 'both'] %}
                     <td>{{ results.regression[i] | round(2) }}</td>
-                    {% else %}
-                    <td>{{ 'Yes' if results.classification[i] == 1 else 'No' }}</td>
+                    {% endif %}
+                    {% if task in ['classification', 'both'] %}
+                    <td>{{ 'Malaria outbreak' if results.classification[i] == 1 else 'No Malaria Outbreak' }}</td>
                     <td>{{ results.class_probabilities[i] | round(3) }}</td>
                     {% endif %}
                 </tr>
